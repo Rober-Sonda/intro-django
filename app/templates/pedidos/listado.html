@@ -1,0 +1,42 @@
+{% extends "layouts/tienda.html" %}
+
+{% load carrito_tags %}
+
+{% block title %} Mis pedidos {% endblock %}
+
+{% block content %}
+    <div class="container m-auto">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th class="text-center">Total</th>
+                                <th class="text-center">Fecha</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pedido in object_list %}
+                                <tr>
+                                    <td>{{ pedido.id }}</td>
+                                    <td class="text-center">{{ pedido.total|money_format:"$" }}</td>
+                                    <td class="text-center">{{ pedido.fecha_alta|date:'d/m/Y H:i' }}</td>
+                                    <td class="text-center"><a href="{% url 'detallepedido' pedido.id %}" class="btn btn-info btn-sm">Ver detalle</a></td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="alert alert-danger">No tienes ninfgun pedido todavia</div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

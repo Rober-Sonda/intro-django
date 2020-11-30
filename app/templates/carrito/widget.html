@@ -1,0 +1,41 @@
+{% load carrito_tags %}
+{% load static %}
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet"/>
+<div class="card bg-primary" style="max-width: 18rem;">
+    <div class="card-header text-white text-center">
+        Carrito de compras
+    </div>
+    {% if request.session.carrito.items %}
+        {% for key, value in request.session.carrito.items %}
+            <div class="card p-3">
+                <ul class="list-group list-group-flush">
+                    <li class="card-body text-primary list-group-item">Producto: {{ value.nombre }}</li>
+                </ul>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Precio: {{ value.precio|money_format:"$" }}</li>
+                        <li class="list-group-item">Cantidad: {{ value.cantidad }}</li>
+                    </ul>
+                </div>
+                <div class="flex-row">
+                    <a class="align-left text-center">Subtotal: {{ value.precio|multiply:value.cantidad|money_format:"$" }}</a>
+                    <a class="btn btn-success" href="{% url 'cart:add_product' value.producto_id %}" class="btn-sm btn btn-success">+</a>
+                    <a class="btn btn-danger remove_red_eye" href="{% url 'cart:decrement_product' value.producto_id %}" class="btn-sm btn btn-danger">-</a>
+                </div>
+            </div>
+
+        {% endfor %}
+     {% else %}
+        <div class="card-footer alert alert-danger text-center">
+            No tienes productos en el carrito
+        </div>
+    {% endif %}
+        <div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Total: {{ cart_total_amount|money_format:"$" }}</li>
+                {% if request.session.carrito.items  %}
+                    <a href="{% url "procesar_pedido" %}" class="btn btn-success">Crear pedido</a>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
